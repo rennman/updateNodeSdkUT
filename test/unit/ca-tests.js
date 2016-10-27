@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+//module.exports = function(test, Promise) { 
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
@@ -22,9 +23,10 @@ var hfc = require('../..');
 var util = require('util');
 var fs = require('fs');
 
-var keyValStorePath = '/tmp/keyValStore';
+var keyValStorePath = '/tmp/caTestsKeyValStore';
 var keyValStorePath2 = keyValStorePath + '2';
 
+var testChainName = 'caTestsChain';
 //
 // Run the registrar test
 //
@@ -32,7 +34,7 @@ test('Test enroll() and registrar privileges with registerAndEnroll()', function
 	//
 	// Create and configure the test chain
 	//
-	var chain = hfc.newChain('testChain');
+	var chain = hfc.newChain(testChainName);
 	var expect = '';
 	var found = '';
 	var webUser;
@@ -141,7 +143,7 @@ test('Test register() and Enroll() methods', function(t) {
 	//
 	// Create and configure the test chain
 	//
-	var chain = hfc.newChain('testChain1');
+	var chain = hfc.newChain(testChainName+'1');
 	var expect = '';
 	var found = '';
 	var webUser;
@@ -201,14 +203,14 @@ test('Test register() and Enroll() methods', function(t) {
 test('enroll again', function(t) {
 	//
 	// Remove the file-based keyValStore
-	// Create and configure testChain2 so there is no shared state with testChain
+	// Create and configure <testChainName>2 so there is no shared state with <testChainName>
 	// This is necessary to start without a local cache.
 	//
 	fs.renameSync(keyValStorePath, keyValStorePath2);
-	var chain = hfc.newChain('testChain2');
+	var chain = hfc.newChain(testChainName+'2');
 	chain.setKeyValueStore(
 		hfc.newKeyValueStore({
-			path: '/tmp/keyValStore'
+			path: keyValStorePath
 		}));
 	chain.setMemberServicesUrl('grpc://localhost:7054');
 	chain.enroll('admin', 'Xurw3yU9zI0l')
@@ -253,3 +255,5 @@ function rmdir(path) {
 		fs.rmdirSync(path);
 	}
 }
+//return Promise.resolve();
+//}
