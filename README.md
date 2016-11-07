@@ -1,5 +1,8 @@
 ## Hyperledger Fabric Client SDK for Node.js
 
+[![Build Status](https://jenkins.hyperledger.org/buildStatus/icon?job=fabric-sdk-node-merge-x86_64)](https://jenkins.hyperledger.org/view/fabric-sdk-node/job/fabric-sdk-node-merge-x86_64/)
+[![Documentation Status](https://readthedocs.org/projects/fabric-sdk-node/badge/?version=master)](http://fabric-sdk-node.readthedocs.io/en/master/?badge=master)
+
 The Hyperledger Fabric Client SDK (HFC) provides a powerful and easy to use API to interact with a Hyperledger Fabric blockchain.
 
 As an application developer, to learn about how to install and use the Node.js SDK, please visit the [fabric documentation](http://hyperledger-fabric.readthedocs.io/en/latest/Setup/NodeSDK-setup).
@@ -24,65 +27,11 @@ The following tests require setting up a local blockchain network as the target.
 * run `vagrant up` to launch the vagrant VM
 * Once inside vagrant, `cd $GOPATH/src/github.com/hyperledger/fabric`
 * run `make images` to build the docker images
-* create a docker-compose.yaml file in home directory (/home/vagrant) and copy the following content into the file
-```yaml
-vp:
-  image: hyperledger/fabric-peer
-  environment:
-    - CORE_PEER_ADDRESSAUTODETECT=true
-    - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-    - CORE_LOGGING_LEVEL=DEBUG
-    - CORE_PEER_NETWORKID=${CORE_PEER_NETWORKID}
-    - CORE_NEXT=true
-    - CORE_PEER_ENDORSER_ENABLED=true
-    - CORE_SECURITY_ENABLED=true
-    - CORE_PEER_PKI_ECA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLSCA_PADDR=membersrvc:7054
-    - CORE_PEER_PKI_TLS_ROOTCERT_FILE=./bddtests/tlsca.cert
-  command: peer node start
-  volumes:
-      - /var/run/:/host/var/run/
-
-membersrvc:
-  image: hyperledger/fabric-membersrvc
-  command: membersrvc
-  ports:
-    - 7054:7054
-
-orderer:
-  image: hyperledger/fabric-orderer
-  environment:
-    - ORDERER_GENERAL_LEDGERTYPE=ram
-    - ORDERER_GENERAL_BATCHTIMEOUT=10s
-    - ORDERER_GENERAL_BATCHSIZE=10
-    - ORDERER_GENERAL_MAXWINDOWSIZE=1000
-    - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-    - ORDERER_GENERAL_LISTENPORT=5005
-    - ORDERER_RAMLEDGER_HISTORY_SIZE=100
-    - ORDERER_GENERAL_ORDERERTYPE=solo
-  working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
-  command: orderer
-  ports:
-    - 5151:5005
-
-vp0:
-  extends:
-    service: vp
-  environment:
-    - CORE_PEER_ID=vp0
-    - CORE_SECURITY_ENROLLID=test_vp0
-    - CORE_SECURITY_ENROLLSECRET=MwYpmSRjupbT
-    - CORE_PEER_PROFILE_ENABLED=true
-  links:
-    - membersrvc
-    - orderer0
-  ports:
-    - 7051:7051
-    - 7053:7053
-```
-* run `docker-compose up` to launch the network
+* copy [docker-compose.yml](https://raw.githubusercontent.com/hyperledger/fabric-sdk-node/master/test/fixtures/docker-compose.yml) file in home directory (/home/vagrant) and copy the following content into the file
+* run `docker-compose up --force-recreate` to launch the network
 * Back in your native host (MacOS, or Windows, or Ubuntu, etc), run the following tests:
+  * Clear out your previous keyvalue store if needed (rm -fr /tmp/KeyValStore*)
+  * Run `gulp test` to run the entire test bucket and generate coverage reports (both in console output and HTMLs)
   * Test user management with a member services, run `node test/unit/ca-tests.js`
   * Test happy path from end to end, run `node test/unit/end-2-end.js`
   * Test transaction proposals, run `node test/unit/endorser-tests.js`
@@ -94,13 +43,10 @@ The following check-list is for code contributors to make sure their changesets 
 Check the coding styles, run the following command and make sure no ESLint violations are present:
 * `gulp`
 
-Run the full unit test bucket:
-* `node test/unit/headless-tests.js`
-* `node test/unit/ca-tests.js`
-* `node test/unit/end-2-end.js`
-* `node test/unit/endorser-tests.js`
-* `node test/unit/orderer-tests.js`
-* `node test/unit/orderer-member-tests.js`
+Run the full unit test bucket and make sure 100% are passing:
+* `gulp test`
+
+The gulp test command above also generates code coverage reports. Your new code should be accompanied with unit tests and pass 80% lines coverage or above.
 
 ### HFC objects and reference documentation
 For a high-level design specificiation for Fabric SDKs of all languages, visit [this google doc](https://docs.google.com/document/d/1R5RtIBMW9fZpli37E5Li5_Q9ve3BnQ4q3gWmGZj6Sv4/edit?usp=sharing) (Work-In-Progress).

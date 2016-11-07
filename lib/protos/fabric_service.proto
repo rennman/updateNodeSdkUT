@@ -18,27 +18,9 @@ syntax = "proto3";
 
 package protos;
 
-import "google/protobuf/empty.proto";
+import "fabric_proposal.proto";
+import "fabric_proposal_response.proto";
 
-// Interface exported by the server.
-service Admin {
-    // Return the serve status.
-    rpc GetStatus(google.protobuf.Empty) returns (ServerStatus) {}
-    rpc StartServer(google.protobuf.Empty) returns (ServerStatus) {}
-    rpc StopServer(google.protobuf.Empty) returns (ServerStatus) {}
-}
-
-message ServerStatus {
-
-    enum StatusCode {
-        UNDEFINED = 0;
-        STARTED = 1;
-        STOPPED = 2;
-        PAUSED = 3;
-        ERROR = 4;
-        UNKNOWN = 5;
-    }
-
-    StatusCode status = 1;
-
+service Endorser {
+	rpc ProcessProposal(Proposal) returns (ProposalResponse) {}
 }
