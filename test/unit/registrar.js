@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+//module.exports = function(test, Promise) {
 winston = require('winston');
 winston.level = 'debug';
 var hfc = require('../..');
@@ -29,6 +30,8 @@ var keyValStorePath = path.join(getUserHome(), 'kvsTemp');
 var keyValStorePath2 = keyValStorePath + "2";
 var keyValStorePath3 = keyValStorePath + "3";
 
+console.log("keyValStorePath:",keyValStorePath);
+
 function getUserHome() {
         return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
@@ -41,11 +44,12 @@ test('registrar test', function (t) {
         if (err) {
           fail(t, "registrarTest", err);
           // Exit the test script after a failure
-          process.exit(1);
+          //process.exit(1);
         } else {
           pass(t, "registrarTest");
         }
     });
+    t.end();
 });
 
 //
@@ -56,11 +60,12 @@ test('enroll again', function (t) {
         if (err) {
           fail(t, "enrollAgain", err);
           // Exit the test script after a failure
-          process.exit(1);
+          //process.exit(1);
         } else {
           pass(t, "enrollAgain");
         }
     });
+    t.end();
 });
 
 var chain,admin,webAdmin,webUser;
@@ -236,3 +241,5 @@ function fail(t, msg, err) {
     t.fail("Failure: [" + msg + "]: [" + err + "]");
     t.end(err);
 }
+//return Promise.resolve();
+//}
