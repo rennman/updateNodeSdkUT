@@ -11,8 +11,6 @@ services:
       extends:
          file: compose-defaults.yml
          service: orderer
-      environment:
-         - ORDERER_GENERAL_ORDERERTYPE=solo
 
    vp0:
       container_name: vp0

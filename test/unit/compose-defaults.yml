@@ -8,6 +8,7 @@ services:
       volumes:
          - /var/run/docker.sock:/var/run/docker.sock
       ports:
+         #EAB perhaps map to multiple ports/peeer?
          - 7051:7051
       command: sh -c "peer node start"
       entrypoint: /tmp/wait-for-membersrvc.sh
@@ -24,15 +25,19 @@ services:
          - CORE_LOGGING_VERSION=debug
          #- CORE_PEER_ADDRESSAUTODETECT=true
       
-         - CORE_PEER_PKI_ECA_PADDR=172.17.0.1:7054
-         - CORE_PEER_PKI_TCA_PADDR=172.17.0.1:7054
-         - CORE_PEER_PKI_TLSCA_PADDR=172.17.0.1:7054
+         #EAB perhaps change to hostname?
+         #- CORE_PEER_PKI_ECA_PADDR=172.17.0.1:7054
+         #- CORE_PEER_PKI_TCA_PADDR=172.17.0.1:7054
+         #- CORE_PEER_PKI_TLSCA_PADDR=172.17.0.1:7054
+         - CORE_PEER_PKI_ECA_PADDR=membersrvc0:7054
+         - CORE_PEER_PKI_TCA_PADDR=membersrvc0:7054
+         - CORE_PEER_PKI_TLSCA_PADDR=membersrvc0:7054
          - CORE_PEER_VALIDATOR_CONSENSUS_PLUGIN=noops
       
          - CORE_NEXT=true
          - CORE_PEER_ENDORSER_ENABLED=true
          - CORE_SECURITY_ENABLED=true
-         - CORE_VM_ENDPOINT=http://172.17.0.1:2375
+         # - CORE_VM_ENDPOINT=http://172.17.0.1:2375
          # TODO:  This is currently required due to BUG in variant logic based upon log level.
          #- CORE_PEER_NETWORKID=${CORE_PEER_NETWORKID}
    
@@ -74,5 +79,6 @@ services:
          - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
          - ORDERER_GENERAL_LISTENPORT=5005
          - ORDERER_RAMLEDGER_HISTORY_SIZE=100
+         - ORDERER_GENERAL_ORDERERTYPE=solo
       working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
       command: orderer
