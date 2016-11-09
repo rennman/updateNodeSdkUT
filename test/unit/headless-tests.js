@@ -16,7 +16,6 @@
 
 'use strict';
 
-module.exports = function(test, Promise) {
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
@@ -122,8 +121,7 @@ test('\n\n ** Config **', function(t) {
 	global.hfc.config = undefined;
 	t.equals(hfc.getConfigSetting('request-timeout', 'notfound'), 3000, 'checking that able to get "request-timeout" value from an additional configuration file');
 	//try adding another config file
-	// hfc.addConfigFile('test/fixtures/local.json');
-	hfc.addConfigFile('fixtures/local.json');
+	hfc.addConfigFile('test/fixtures/local.json');
 	t.equals(hfc.getConfigSetting('test-2', 'notfound'), 'local', 'checking that able to test-2 value from an additional configuration file');
 	t.equals(hfc.getConfigSetting('test-3', 'notfound'), 'env', 'checking that test-3 environment values are used');
 	t.equals(hfc.getConfigSetting('test-4', 'notfound'), 'argv', 'checking that test-4 argument values are used');
@@ -1541,7 +1539,5 @@ function getRelativePath(dir /*string*/) {
 		if (dir.toString().substr(0,1) === '/')	dir = dir.substr(1);
 		return dir;
 	}
-}
-return Promise.resolve();
 }
 

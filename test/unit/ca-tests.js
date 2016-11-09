@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-module.exports = function(test, Promise) { 
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
@@ -255,6 +254,4 @@ function rmdir(path) {
 		});
 		fs.rmdirSync(path);
 	}
-}
-return Promise.resolve();
 }
