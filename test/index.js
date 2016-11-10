@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 var path = require('path');
 
 // Load this module, and test itself.
 //
 require('surveyor')({
-    testDir : __dirname,
-    //specDir: 'unit', // Optional. Default is 'spec', eg. {testDir}/spec
-    //globalFixtures: [
-    //     'global/globalA,
-    //     'global/globalB'
-   // ],
-    exitOnFinish: true
+	testDir: __dirname,
+	//specDir: 'unit', // Optional. Default is 'spec', eg. {testDir}/spec
+	//globalFixtures: [
+	//     'global/globalA,
+	//     'global/globalB'
+	// ],
+	exitOnFinish: true
 });
 
 //require('surveyor')({
